@@ -1,9 +1,8 @@
 import paho.mqtt.client as mqtt
 import ssl
-import yaml
-from pathlib import Path
 from rich import print
-from munch import Munch
+
+from . import config_loader
 
 
 def create_client(config, prepare_client):
@@ -35,9 +34,6 @@ def create_client(config, prepare_client):
     return client
 
 def cli():
-    config_file = '/home/pmorch/.config/polyopen/config.yaml'
-    config = yaml.safe_load(Path(config_file).read_bytes())
-    config = Munch.fromDict(config)
     
     def prepare_client(client):
         
@@ -54,5 +50,6 @@ def cli():
         client.on_connect = on_connect
         client.on_message = on_message
 
+    config = config_loader.load()
     client = create_client(config, prepare_client)
     client.loop_forever()
