@@ -1,0 +1,74 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "polyopen"
+# TODO: How does dynamic version work?
+dynamic = ["version"]
+# version = "0.0.1"
+authors = [
+  { name="Peter Valdemar Mørch", email="peter@morch.com" },
+]
+license = "MIT"
+keywords = []
+description = "Open files and URLs on different machines"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "paho-mqtt",
+    "rich",
+    "rich-argparse",
+    "pyyaml",
+    "munch"
+]
+
+[project.urls]
+# Homepage = "https://github.com/pypa/sampleproject"
+# Issues = "https://github.com/pypa/sampleproject/issues"
+
+[project.scripts]
+cli = "polyopen.mqttclient:cli"
+
+[tool.hatch.version]
+path = "src/polyopen/__about__.py"
+
+[tool.hatch.env]
+# https://github.com/juftin/hatch-pip-compile
+requires = [
+    "hatch-pip-compile"
+]
+
+[tool.hatch.envs.default]
+type = "pip-compile"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/polyopen tests}"
+
+[tool.coverage.run]
+source_pkgs = ["polyopen", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/polyopen/__about__.py",
+]
+
+[tool.coverage.paths]
+polyopen = ["src/polyopen", "*/polyopen/src/polyopen"]
+tests = ["tests", "*/polyopen/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]

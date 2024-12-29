@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <title>Browser HTML</title>
+  </head>
+  <body>
+    Browser share
+    <button id="share_button">Share</button>
+    <script>
+      console.log('mqtt', mqtt)
+      const button = document.getElementById('share_button')
+      console.log(button)
+      button.addEventListener('click', () => {
+        const client = mqtt.connect("wss://pmorch:asdfasdf@mqtt.morch.com");
+        client.on("connect", () => {
+          console.log('connected')
+          client.publish("pmorch", "Hello from mqtt browser");
+          console.log('published')
+          client.end()
+          console.log('ended')
+        });
+        client.on('error', (error) => {
+          console.log('error', error)
+        })
+      })
+    </script>
+  </body>
+</html>
