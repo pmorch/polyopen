@@ -5,6 +5,7 @@
 # - paho-mqtt
 # - rich
 # - rich-argparse
+# - xdg-base-dirs
 #
 
 markdown-it-py==3.0.0
@@ -27,3 +28,5 @@ rich-argparse==1.6.0
     # via hatch.envs.default
 typing-extensions==4.12.2
     # via mashumaro
+xdg-base-dirs==6.0.2
+    # via hatch.envs.default

@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 from enum import Enum
+from xdg_base_dirs import xdg_config_home
 
 
 class Transport(Enum):
@@ -42,7 +43,10 @@ class Config:
 
 
 def load() -> Config:
-
-    config_file = '/home/pmorch/.config/polyopen/config.yaml'
+    config_file = xdg_config_home() / 'polyopen/config.yaml'
+    if not config_file.exists():
+        raise FileNotFoundError(
+            f"{config_file} not found. See polyopen's README.md"
+        )
     config = yaml_codec.decode(Path(config_file).read_bytes(), Config)
     return config

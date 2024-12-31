@@ -25,6 +25,7 @@ dependencies = [
     "rich",
     "rich-argparse",
     "mashumaro[yaml]",
+    "xdg-base-dirs"
 ]
 
 [project.urls]
