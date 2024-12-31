@@ -24,16 +24,17 @@ dependencies = [
     "paho-mqtt",
     "rich",
     "rich-argparse",
-    "pyyaml",
-    "munch"
+    "mashumaro[yaml]",
 ]
 
 [project.urls]
+# TODO: Setup project urls
 # Homepage = "https://github.com/pypa/sampleproject"
 # Issues = "https://github.com/pypa/sampleproject/issues"
 
 [project.scripts]
 cli = "polyopen.mqttclient:cli"
+polyopen = "polyopen.main:main"
 
 [tool.hatch.version]
 path = "src/polyopen/__about__.py"
@@ -51,6 +52,7 @@ type = "pip-compile"
 extra-dependencies = [
   "mypy>=1.0.0",
 ]
+
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/polyopen tests}"
 

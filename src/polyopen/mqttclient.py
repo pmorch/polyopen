@@ -6,11 +6,9 @@ from . import config_loader
 
 
 def create_client(config, prepare_client = None):
-    pass
-
     client = mqtt.Client(
         callback_api_version=mqtt.CallbackAPIVersion.VERSION2,
-        transport=config.MQTT.transport,
+        transport=config.MQTT.transport.value,
         client_id=config.clientId
     )
     if (config.MQTT.auth.username is not None and config.MQTT.auth.password is not None):
@@ -42,11 +40,11 @@ def cli():
             print(f"Connected with result code {reason_code}")
             # Subscribing in on_connect() means that if we lose the connection and
             # reconnect then subscriptions will be renewed.
-            client.subscribe("pmorch")
+            client.subscribe("#")
 
 
         def on_message(client, userdata, msg):
-            print(msg.topic+" "+str(msg.payload))
+            print(msg.topic+" "+msg.payload.decode('utf-8'))
 
         client.on_connect = on_connect
         client.on_message = on_message
