@@ -43,10 +43,8 @@ class Config:
 
 
 def load() -> Config:
-    config_file = xdg_config_home() / 'polyopen/config.yaml'
+    config_file = xdg_config_home() / "polyopen/config.yaml"
     if not config_file.exists():
-        raise FileNotFoundError(
-            f"{config_file} not found. See polyopen's README.md"
-        )
+        raise FileNotFoundError(f"{config_file} not found. See polyopen's README.md")
     config = yaml_codec.decode(Path(config_file).read_bytes(), Config)
     return config

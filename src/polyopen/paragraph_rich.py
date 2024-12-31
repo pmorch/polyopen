@@ -5,6 +5,7 @@ from rich.text import Text
 from rich_argparse import RichHelpFormatter
 from rich_argparse._common import _rich_wrap
 
+
 # See https://github.com/hamdanal/rich-argparse/issues/140#issuecomment-2558440424
 class ParagraphRichHelpFormatter(RichHelpFormatter):
     """Rich help message formatter which retains paragraph separation."""
@@ -23,7 +24,7 @@ class ParagraphRichHelpFormatter(RichHelpFormatter):
     def _rich_fill_text(self, text: Text, width: int, indent: Text) -> Text:
         lines = self._rich_split_lines(text, width)
         return Text("\n").join(indent + line for line in lines) + "\n"
-    
+
+
 class HelpFormatter(argparse.ArgumentDefaultsHelpFormatter, ParagraphRichHelpFormatter):
     pass
-
