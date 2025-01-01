@@ -56,6 +56,7 @@ requires = [
 type = "pip-compile"
 
 [tool.hatch.envs.python-tidy]
+type = "virtual"
 extra-dependencies = [
   "black",
   "isort",
@@ -63,6 +64,7 @@ extra-dependencies = [
 ]
 
 [tool.hatch.envs.types]
+type = "virtual"
 extra-dependencies = [
   "mypy>=1.0.0",
 ]
