@@ -1,7 +1,7 @@
 import mashumaro.codecs.yaml as yaml_codec
 import subprocess
 from .paragraph_rich import HelpFormatter
-from . import config_loader, mqttclient, messages, mounts
+from . import valid_url, config_loader, mqttclient, messages, mounts
 
 daemon_help = """
 Run a subscribing daemon that listens for messages and handles them.
@@ -25,6 +25,12 @@ class DaemonHandleMessage(messages.HandleMessage):
             return
         xdg_open(local_path)
 
+    def handleXdgOpenURL(self, topic: str, message: messages.XdgOpenURL):
+        url = message.URL
+        if not valid_url.is_valid_url(url):
+            raise ValueError(f"{url} is not a valid URL")
+        xdg_open(url)
+        
 
 def daemon_command(config: config_loader.Config, args):
     handler = DaemonHandleMessage()

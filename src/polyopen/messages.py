@@ -14,11 +14,16 @@ class XdgOpenPathWithField:
 
 
 @dataclass
-class Another:
-    another: int
+class XdgOpenURL:
+    URL: str
 
 
-Message = XdgOpenPathWithField | Another
+@dataclass
+class XdgOpenURLWithField:
+    xdgOpenURL: XdgOpenURL
+
+
+Message = XdgOpenPathWithField | XdgOpenURLWithField
 
 
 # deriving from messages.HandleMessage ensures we get quick errors if we're not
@@ -28,10 +33,17 @@ class HandleMessage(ABC):
     def handle(self, topic: str, message: Message):
         if isinstance(message, XdgOpenPathWithField):
             self.handleXdgOpenPath(topic, message.xdgOpenPath)
+        elif isinstance(message, XdgOpenURLWithField):
+            self.handleXdgOpenURL(topic, message.xdgOpenURL)
         else:
             raise ValueError("Unknown message type:", message)
 
     @abstractmethod
     def handleXdgOpenPath(self, topic: str, message: XdgOpenPath):
+        """Override this in derived classes"""
+        raise NotImplementedError()
+
+    @abstractmethod
+    def handleXdgOpenURL(self, topic: str, message: XdgOpenURL):
         """Override this in derived classes"""
         raise NotImplementedError()
