@@ -54,7 +54,7 @@ oneOf {
   xdg-open-url {
     url: string
   }
-  mardown-message: string
+  markdown-message: string
 }
 ```
 
