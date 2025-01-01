@@ -34,7 +34,6 @@ dependencies = [
 # Issues = "https://github.com/pypa/sampleproject/issues"
 
 [project.scripts]
-cli = "polyopen.mqttclient:cli"
 polyopen = "polyopen.main:main"
 
 [tool.hatch.version]

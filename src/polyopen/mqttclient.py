@@ -30,24 +30,3 @@ def create_client(config, prepare_client=None):
     client.connect(config.MQTT.host, config.MQTT.port, keepalive)
 
     return client
-
-
-def cli():
-
-    def prepare_client(client):
-
-        def on_connect(client, userdata, flags, reason_code, properties):
-            print(f"Connected with result code {reason_code}")
-            # Subscribing in on_connect() means that if we lose the connection and
-            # reconnect then subscriptions will be renewed.
-            client.subscribe("#")
-
-        def on_message(client, userdata, msg):
-            print(msg.topic + " " + msg.payload.decode("utf-8"))
-
-        client.on_connect = on_connect
-        client.on_message = on_message
-
-    config = config_loader.load()
-    client = create_client(config, prepare_client)
-    client.loop_forever()
