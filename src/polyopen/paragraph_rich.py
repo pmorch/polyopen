@@ -1,7 +1,7 @@
 import argparse
+
 from rich.containers import Lines
 from rich.text import Text
-
 from rich_argparse import RichHelpFormatter
 from rich_argparse._common import _rich_wrap
 

@@ -1,8 +1,9 @@
-import mashumaro.codecs.yaml as yaml_codec
 from dataclasses import dataclass, field
+from enum import Enum
 from pathlib import Path
 from typing import Optional
-from enum import Enum
+
+import mashumaro.codecs.yaml as yaml_codec
 from xdg_base_dirs import xdg_config_home
 
 

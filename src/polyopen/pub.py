@@ -1,12 +1,11 @@
-from . import valid_url
 from pathlib import Path
+
+import mashumaro.codecs.yaml as yaml_codec
 from rich.console import Console
 from rich.markdown import Markdown
-import mashumaro.codecs.yaml as yaml_codec
 
+from . import config_loader, messages, mqttclient, valid_url
 from .paragraph_rich import HelpFormatter
-from . import config_loader, mqttclient, messages
-
 
 description = """
 # For path, the path must exist already
@@ -96,10 +95,8 @@ def url_command(config: config_loader.Config, args):
         url = args.url
         if not valid_url.is_valid_url(url):
             raise ValueError(f"{url} is not a valid URL")
-        
-        xdgOpenURL = messages.XdgOpenURL(
-            URL=url
-        )
+
+        xdgOpenURL = messages.XdgOpenURL(URL=url)
         message = messages.XdgOpenURLWithField(xdgOpenURL)
         publish_message(message, messages.XdgOpenURLWithField, args.dest)
 

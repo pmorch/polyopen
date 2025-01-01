@@ -1,5 +1,6 @@
-import paho.mqtt.client as mqtt
 import ssl
+
+import paho.mqtt.client as mqtt
 from rich import print
 
 from . import config_loader

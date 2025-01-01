@@ -1,8 +1,9 @@
 import argparse
+
 from rich.markdown import Markdown
 
+from . import config_loader, daemon, pub
 from .paragraph_rich import HelpFormatter
-from . import pub, config_loader, daemon
 
 description = """
 Send messages and commands between machines.
