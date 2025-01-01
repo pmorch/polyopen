@@ -28,6 +28,13 @@ dependencies = [
     "xdg-base-dirs"
 ]
 
+# [project.optional-dependencies]
+# dev = [
+#   "black",
+#   "isort",
+#   "autoflake",
+# ]
+
 [project.urls]
 # TODO: Setup project urls
 # Homepage = "https://github.com/pypa/sampleproject"
@@ -47,6 +54,13 @@ requires = [
 
 [tool.hatch.envs.default]
 type = "pip-compile"
+
+[tool.hatch.envs.python-tidy]
+extra-dependencies = [
+  "black",
+  "isort",
+  "autoflake",
+]
 
 [tool.hatch.envs.types]
 extra-dependencies = [
