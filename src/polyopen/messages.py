@@ -23,7 +23,18 @@ class XdgOpenURLWithField:
     xdgOpenURL: XdgOpenURL
 
 
-Message = XdgOpenPathWithField | XdgOpenURLWithField
+@dataclass
+class VSCode:
+    publisherHostname: str
+    isFile: bool
+    reuseWindow: bool
+    path: str
+
+@dataclass
+class VSCodeWithField:
+    vscode: VSCode
+
+Message = XdgOpenPathWithField | XdgOpenURLWithField | VSCodeWithField
 
 
 # deriving from messages.HandleMessage ensures we get quick errors if we're not
@@ -35,6 +46,8 @@ class HandleMessage(ABC):
             self.handleXdgOpenPath(topic, message.xdgOpenPath)
         elif isinstance(message, XdgOpenURLWithField):
             self.handleXdgOpenURL(topic, message.xdgOpenURL)
+        elif isinstance(message, VSCodeWithField):
+            self.handleVSCode(topic, message.vscode)
         else:
             raise ValueError("Unknown message type:", message)
 
@@ -45,5 +58,10 @@ class HandleMessage(ABC):
 
     @abstractmethod
     def handleXdgOpenURL(self, topic: str, message: XdgOpenURL):
+        """Override this in derived classes"""
+        raise NotImplementedError()
+
+    @abstractmethod
+    def handleVSCode(self, topic: str, message: VSCode):
         """Override this in derived classes"""
         raise NotImplementedError()

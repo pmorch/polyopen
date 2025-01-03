@@ -34,6 +34,10 @@ url_help = """
 Open URL in remote browser
 """
 
+code_help = """
+Open local file or folder in vscode on subscriber
+"""
+
 dest_help = """
 The destination
 """
@@ -42,6 +46,9 @@ list_help = """
 List destinations
 """
 
+reuse_help = """
+Force to open a file or folder in an already opened window. (passed to vscode)
+"""
 
 def setup_args_parser(subparsers, config):
     default_destination = config.destinations[0]
@@ -58,6 +65,12 @@ def setup_args_parser(subparsers, config):
     url.add_argument("url")
     url.set_defaults(func=url_command)
 
+    code = subparsers.add_parser("code", help=code_help, formatter_class=HelpFormatter)
+    code.add_argument("--dest", "-d", help=dest_help, default=default_destination)
+    code.add_argument("--list", "-l", action="store_true", help=list_help)
+    code.add_argument("--reuse-window", "-r", action="store_true", help=reuse_help)
+    code.add_argument("path")
+    code.set_defaults(func=code_command)
 
 def list_destinations(config: config_loader.Config, args):
     lines = ["## Destinations"]
@@ -68,7 +81,6 @@ def list_destinations(config: config_loader.Config, args):
     markdown = "\n".join(lines)
     console = Console()
     console.print(Markdown(markdown))
-
 
 def canonical_absolute_path(path: str):
     """
@@ -113,6 +125,21 @@ def url_command(config: config_loader.Config, args):
         xdgOpenURL = messages.XdgOpenURL(URL=url)
         message = messages.XdgOpenURLWithField(xdgOpenURL)
         publish_message(message, messages.XdgOpenURLWithField, args.dest)
+
+def code_command(config: config_loader.Config, args):
+    if args.list:
+        list_destinations(config, args)
+    else:
+        path = canonical_absolute_path(args.path)
+        vscode = messages.VSCode(
+            path=str(path),
+            isFile=path.is_file(),
+            publisherHostname=config.publisherHostnames[0],
+            reuseWindow=args.reuse_window
+        )
+        message = messages.VSCodeWithField(vscode)
+        publish_message(message, messages.VSCodeWithField, args.dest)
+        
 
 
 def publish_message(message, message_type, dest):

@@ -1,3 +1,4 @@
+from pathlib import Path
 import subprocess
 
 import mashumaro.codecs.yaml as yaml_codec
@@ -18,6 +19,14 @@ def xdg_open(path_or_url):
     command = ["xdg-open", path_or_url]
     subprocess.run(command)
 
+def vscode_open(message: messages.VSCode):
+    type_flag = "--file-uri" if message.isFile else "--folder-uri"
+    remote = f"vscode-remote://ssh-remote+{message.publisherHostname}{message.path}"
+    subprocess.run([
+        'code',
+        type_flag,
+        remote
+    ])
 
 # deriving from messages.HandleMessage ensures we get quick errors if we're not
 # handling all the message types.
@@ -37,6 +46,8 @@ class DaemonHandleMessage(messages.HandleMessage):
             raise ValueError(f"{url} is not a valid URL")
         xdg_open(url)
 
+    def handleVSCode(self, topic: str, message: messages.VSCode):
+        vscode_open(message)
 
 def daemon_command(config: config_loader.Config, args):
     handler = DaemonHandleMessage()
