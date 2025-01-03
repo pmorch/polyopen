@@ -30,9 +30,11 @@ class VSCode:
     reuseWindow: bool
     path: str
 
+
 @dataclass
 class VSCodeWithField:
     vscode: VSCode
+
 
 Message = XdgOpenPathWithField | XdgOpenURLWithField | VSCodeWithField
 

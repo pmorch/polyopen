@@ -50,6 +50,7 @@ reuse_help = """
 Force to open a file or folder in an already opened window. (passed to vscode)
 """
 
+
 def setup_args_parser(subparsers, config):
     default_destination = config.destinations[0]
 
@@ -72,6 +73,7 @@ def setup_args_parser(subparsers, config):
     code.add_argument("path")
     code.set_defaults(func=code_command)
 
+
 def list_destinations(config: config_loader.Config, args):
     lines = ["## Destinations"]
     for i, dest in enumerate(config.destinations):
@@ -81,6 +83,7 @@ def list_destinations(config: config_loader.Config, args):
     markdown = "\n".join(lines)
     console = Console()
     console.print(Markdown(markdown))
+
 
 def canonical_absolute_path(path: str):
     """
@@ -126,6 +129,7 @@ def url_command(config: config_loader.Config, args):
         message = messages.XdgOpenURLWithField(xdgOpenURL)
         publish_message(message, messages.XdgOpenURLWithField, args.dest)
 
+
 def code_command(config: config_loader.Config, args):
     if args.list:
         list_destinations(config, args)
@@ -135,11 +139,10 @@ def code_command(config: config_loader.Config, args):
             path=str(path),
             isFile=path.is_file(),
             publisherHostname=config.publisherHostnames[0],
-            reuseWindow=args.reuse_window
+            reuseWindow=args.reuse_window,
         )
         message = messages.VSCodeWithField(vscode)
         publish_message(message, messages.VSCodeWithField, args.dest)
-        
 
 
 def publish_message(message, message_type, dest):
