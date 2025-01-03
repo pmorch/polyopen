@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import mashumaro.codecs.yaml as yaml_codec
@@ -69,10 +70,23 @@ def list_destinations(config: config_loader.Config, args):
     console.print(Markdown(markdown))
 
 
+def canonical_absolute_path(path: str):
+    """
+    Return an absolute path without e.g. '..' segments.
+
+    patlib.Path.resolve() resolves symlinks (which we don't want)
+
+    pathlib.Path.absolute() makes a path absolute but keeps any '..' segments (which we don't want)
+    """
+    if not Path(path).exists():
+        raise FileNotFoundError(f"{path} doesn't exist")
+    return Path(os.path.abspath(path))
+
+
 def publish_path(config: config_loader.Config, args):
-    path = Path(args.path).absolute()
+    path = canonical_absolute_path(args.path)
     if not path.exists():
-        raise ValueError(f"{args.path} does not exist")
+        raise FileNotFoundError(f"{args.path} does not exist")
 
     xdgOpenPath = messages.XdgOpenPath(
         path=str(path), publisherHostnames=config.publisherHostnames
