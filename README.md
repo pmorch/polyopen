@@ -52,7 +52,7 @@ oneOf {
     path: string
   }
   xdg-open-url {
-    url: string
+    URL: string
   }
   markdown-message: string
 }
@@ -130,7 +130,7 @@ $ xdg-open $url
 
 #### `markdown-message`
 
-Nothing to do here other than display the message.
+Display the received message.
 
 ### Linux Terminal apps
 
@@ -178,6 +178,11 @@ Here the `clientId` will be the `clientId` from the configuration with `-pub`
 appended.
 
 #### Terminal subscriber app
+
+This will actually perform the actions, calling `xdg-open` and `code`.
+
+Handling markdown messages, implies that the subscriber app stores the received
+messages, which is probably a good idea anyway.
 
 ## Future enhancements
 
