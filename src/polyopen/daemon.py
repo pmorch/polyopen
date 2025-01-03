@@ -9,6 +9,10 @@ daemon_help = """
 Run a subscribing daemon that listens for messages and handles them.
 """
 
+debug_help = """
+Don't actually perform any actions, just print out the received messages.
+"""
+
 
 def xdg_open(path_or_url):
     command = ["xdg-open", path_or_url]
@@ -45,6 +49,10 @@ def daemon_command(config: config_loader.Config, args):
             client.subscribe("#")
 
         def on_message(client, userdata, msg):
+            if args.debug:
+                print(f"Topic: {msg.topic}")
+                print(f"Payload: {msg.payload.decode('utf-8')}")
+                return
             message = yaml_codec.decode(msg.payload, messages.Message)
             handler.handle(msg.topic, message)
 
@@ -59,4 +67,5 @@ def setup_args_parser(subparsers, config):
     path = subparsers.add_parser(
         "daemon", help=daemon_help, formatter_class=HelpFormatter
     )
+    path.add_argument("--debug", "-d", action="store_true", help=debug_help)
     path.set_defaults(func=daemon_command)
