@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 import mashumaro.codecs.yaml as yaml_codec
 
@@ -11,6 +12,10 @@ Run a subscribing daemon that listens for messages and handles them.
 
 debug_help = """
 Don't actually perform any actions, just print out the received messages.
+"""
+
+unbuffer_help = """
+Cause stdout to be unbuffered (handy for running under e.g. systemd)
 """
 
 
@@ -47,7 +52,30 @@ class DaemonHandleMessage(messages.HandleMessage):
         vscode_open(message)
 
 
+def unbuffer_stdout():
+    # Unbuffer: https://stackoverflow.com/a/107717/345716
+    class Unbuffered(object):
+        def __init__(self, stream):
+            self.stream = stream
+
+        def write(self, data):
+            self.stream.write(data)
+            self.stream.flush()
+
+        def writelines(self, datas):
+            self.stream.writelines(datas)
+            self.stream.flush()
+
+        def __getattr__(self, attr):
+            return getattr(self.stream, attr)
+
+    sys.stdout = Unbuffered(sys.stdout)
+
+
 def daemon_command(config: config_loader.Config, args):
+    if args.unbuffer:
+        unbuffer_stdout()
+
     handler = DaemonHandleMessage()
 
     def prepare_client(client):
@@ -79,5 +107,6 @@ def setup_args_parser(subparsers, config):
     path = subparsers.add_parser(
         "daemon", help=daemon_help, formatter_class=HelpFormatter
     )
+    path.add_argument("--unbuffer", "-u", action="store_true", help=unbuffer_help)
     path.add_argument("--debug", "-d", action="store_true", help=debug_help)
     path.set_defaults(func=daemon_command)

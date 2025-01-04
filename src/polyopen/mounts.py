@@ -2,11 +2,15 @@ import warnings
 from pathlib import Path
 
 
-def list_remote_mounts():
+def read_raw_mounts():
     mounts = Path("/proc/mounts")
     if not mounts.exists():
         raise RuntimeError(f"{mounts} doesn't exist")
-    lines = mounts.read_text().rstrip().split("\n")
+    return mounts.read_text()
+
+
+def list_remote_mounts(mounts):
+    lines = mounts.strip().split("\n")
 
     # https://stackoverflow.com/questions/18122123
     # Format of /proc/mounts
@@ -38,10 +42,16 @@ def list_remote_mounts():
 
 
 def find_local_path_from_remote(
-    remote_path: str, publisher_hostnames: list[str]
+    remote_path: str,
+    publisher_hostnames: list[str],
+    # Provide mounts to test
+    mounts: str = None,
+    warn_if_missing: bool = True,
 ) -> Path | None:
     remote_path_path = Path(remote_path)
-    remote_mounts = list_remote_mounts()
+    if mounts is None:
+        mounts = read_raw_mounts()
+    remote_mounts = list_remote_mounts(mounts)
     for publisher_hostname in publisher_hostnames:
         for remote_mount in remote_mounts:
             host, hostpath, mount_point = remote_mount
@@ -52,7 +62,7 @@ def find_local_path_from_remote(
             except Exception:
                 continue
             local_path = mount_point / relative
-            if not local_path.exists():
+            if warn_if_missing and not local_path.exists():
                 warnings.warn(f"{local_path} doesn't exist", RuntimeWarning)
             return local_path
     return None
