@@ -11,7 +11,7 @@ udev /dev devtmpfs rw,nosuid,relatime,size=16233640k,nr_inodes=4058410,mode=755,
 devpts /dev/pts devpts rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000 0 0
 tmpfs /run tmpfs rw,nosuid,nodev,noexec,relatime,size=3256728k,mode=755,inode64 0 0
 home:/home/peter /home/pmorch/mnt/tmp fuse.sshfs rw,nosuid,nodev,relatime,user_id=1234,group_id=2435 0 0
-kosh:/peterp /home/pmorch/mnt/peterp nfs4 rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,soft,proto=tcp,timeo=100,retrans=5,sec=sys,clientaddr=192.168.1.124,local_lock=none,addr=192.168.1.2 0 0
+kosh:/store /home/pmorch/mnt/store nfs4 rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,soft,proto=tcp,timeo=100,retrans=5,sec=sys,clientaddr=192.168.0.3,local_lock=none,addr=192.168.0.2 0 0
 """
 
 
@@ -24,18 +24,32 @@ class TestSum(unittest.TestCase):
                 "home",
                 Path("/home/peter"),
                 Path("/home/pmorch/mnt/tmp"),
-            )
+            ),
+            (
+                "kosh",
+                Path("/store"),
+                Path("/home/pmorch/mnt/store"),
+            ),
         ]
         self.assertEqual(got, expected)
 
     def test_local_path_happy(self):
         got = mounts.find_local_path_from_remote(
             "/home/peter/foobar",
-            ["home", "otherhost"],
+            ["home", "kosh"],
             mounts=dummy_mount_output,
             warn_if_missing=False,
         )
         self.assertEqual(got, Path("/home/pmorch/mnt/tmp/foobar"))
+
+    def test_local_path_happy_nfs4(self):
+        got = mounts.find_local_path_from_remote(
+            "/store/file.txt",
+            ["home", "kosh"],
+            mounts=dummy_mount_output,
+            warn_if_missing=False,
+        )
+        self.assertEqual(got, Path("/home/pmorch/mnt/store/file.txt"))
 
     def test_local_path_no_matching_mount(self):
         got = mounts.find_local_path_from_remote(

@@ -1,3 +1,4 @@
+import re
 import warnings
 from pathlib import Path
 
@@ -22,7 +23,7 @@ def list_remote_mounts(mounts):
     for line in lines:
         parts = line.split()
         device, mount_point, type, *_ = parts
-        if type != "fuse.sshfs":
+        if type != "fuse.sshfs" and not re.match(r"^nfs\d$", type):
             continue
         device_parts = device.split(":")
         if len(device_parts) != 2:
