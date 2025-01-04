@@ -37,7 +37,6 @@ class DaemonHandleMessage(messages.HandleMessage):
         local_path = mounts.find_local_path_from_remote(
             message.path, message.publisherHostnames
         )
-        print(f"m: {message} lp: {local_path}")
         if local_path is None:
             return
         xdg_open(local_path)
