@@ -208,6 +208,12 @@ messages, which is probably a good idea anyway.
 
 ## Future enhancements
 
+* Document autostart with `.desktop` file or `systemd` (with [`Requires=xdg-desktop-autostart.target`](https://unix.stackexchange.com/a/730170/8239)).
+  * See/update [discussion](https://askubuntu.com/questions/1498075)
+  * systemd has advantages:
+    * Logging of stdout/stderr
+    * Allow stop/start
+    * Restart on crash/failure
 * Subscriber Discovery: Currently the configuration requires the users to
   maintain a list of topics. That gets unwieldy when the number of clients
   grows. And in this application there is a one-to-one between
@@ -215,7 +221,10 @@ messages, which is probably a good idea anyway.
   asyncio instead of `client.loop_forever()`
 * Ack using MQTT request/response.
   * [paho.mqtt.python](https://github.com/eclipse-paho/paho.mqtt.python) does
-    not really document how to do this.
+    not really document how to do this. [How to implement a request-response
+    pattern with paho mqtt java? - Stack
+    Overflow](https://stackoverflow.com/questions/62263089/how-to-implement-a-request-response-pattern-with-paho-mqtt-java)
+    discusses how to do it with the paho java client.
 
 ## Links
 
