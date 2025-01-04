@@ -55,7 +55,10 @@ def daemon_command(config: config_loader.Config, args):
             print(f"Connected with result code {reason_code}")
             # Subscribing in on_connect() means that if we lose the connection and
             # reconnect then subscriptions will be renewed.
-            client.subscribe("#")
+            topic_wildcard = "#"
+            if config.MQTT.topicPrefix:
+                topic_wildcard = "/".join([config.MQTT.topicPrefix, topic_wildcard])
+            client.subscribe(topic_wildcard)
 
         def on_message(client, userdata, msg):
             if args.debug:

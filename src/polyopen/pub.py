@@ -107,7 +107,7 @@ def publish_path(config: config_loader.Config, args):
         path=str(path), publisherHostnames=config.publisherHostnames
     )
     message = messages.XdgOpenPathWithField(xdgOpenPath)
-    publish_message(message, messages.XdgOpenPathWithField, args.dest)
+    publish_message(message, messages.XdgOpenPathWithField, config, args)
 
 
 def path_command(config: config_loader.Config, args):
@@ -127,7 +127,7 @@ def url_command(config: config_loader.Config, args):
 
         xdgOpenURL = messages.XdgOpenURL(URL=url)
         message = messages.XdgOpenURLWithField(xdgOpenURL)
-        publish_message(message, messages.XdgOpenURLWithField, args.dest)
+        publish_message(message, messages.XdgOpenURLWithField, config, args)
 
 
 def code_command(config: config_loader.Config, args):
@@ -142,10 +142,10 @@ def code_command(config: config_loader.Config, args):
             reuseWindow=args.reuse_window,
         )
         message = messages.VSCodeWithField(vscode)
-        publish_message(message, messages.VSCodeWithField, args.dest)
+        publish_message(message, messages.VSCodeWithField, config, args)
 
 
-def publish_message(message, message_type, dest):
+def publish_message(message, message_type, config: config_loader.Config, args):
     message_yaml = yaml_codec.encode(message, message_type)
 
     config = config_loader.load()
@@ -166,6 +166,10 @@ def publish_message(message, message_type, dest):
     client = mqttclient.create_client(config, prepare_client)
 
     client.loop_start()
+
+    dest = args.dest
+    if config.MQTT.topicPrefix:
+        dest = "/".join([config.MQTT.topicPrefix, dest])
 
     msg_info = client.publish(dest, message_yaml, qos=1)
     msg_info.wait_for_publish()
