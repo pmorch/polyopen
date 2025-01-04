@@ -1,3 +1,5 @@
+# **NOTE**: Work in progress.
+
 ## Polyopen
 
 Send URls, notes, filenames between different clients.
@@ -10,8 +12,6 @@ An open-source version of [Pushbullet](https://www.pushbullet.com/) plus support
 for terminal apps.
 
 ## Project status
-
-**NOTE**: Work in progress.
 
 What is working is to launch a file, URL or VS Code session from one terminal on
 one machine to cause a terminal on another machine to launch them.
