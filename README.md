@@ -2,6 +2,28 @@
 
 Send URls, notes, filenames between different clients.
 
+An MQTT server is used as a router for publishers to request files, URLs, VS
+Code sessions to be launched on subscribers or for publishers to send Markdown
+notes from publisher to subscriber.
+
+An open-source version of [Pushbullet](https://www.pushbullet.com/) plus support
+for terminal apps.
+
+## Project status
+
+**NOTE**: Work in progress.
+
+What is working is to launch a file, URL or VS Code session from one terminal on
+one machine to cause a terminal on another machine to launch them.
+
+Still missing:
+
+* All browser and mobile implementations.
+* Details of `publisherHostnames` / `subscriptions` / `destinationTopics` are
+  not really elegant and likely to change.
+  * Currently the subscriber daemon subscribes to topic `#` == *all*, so it
+    doesn't matter what the publisher uses.
+
 ## Goals
 
 The goal is to support these use cases:
@@ -191,6 +213,9 @@ messages, which is probably a good idea anyway.
   grows. And in this application there is a one-to-one between
 * Do we need the terminal subscriber to do anything else? Then perhaps we need
   asyncio instead of `client.loop_forever()`
+* Ack using MQTT request/response.
+  * [paho.mqtt.python](https://github.com/eclipse-paho/paho.mqtt.python) does
+    not really document how to do this.
 
 ## Links
 
